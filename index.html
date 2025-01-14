@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="static/favicon.ico" />
     <title>Ona Spark</title>
     <style>
         * {
@@ -154,7 +155,9 @@
         .progress {
             width: 0%;
             height: 100%;
-            background: #3b82f6;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+            background-size: 200% 100%;
+            animation: gradientMove 2s linear infinite;
             transition: width 1s linear;
         }
 
@@ -167,6 +170,11 @@
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
 
         @media (max-width: 768px) {
@@ -240,12 +248,25 @@
         const progressBar = document.getElementById('progress');
         const countdownEl = document.getElementById('countdown');
         
+        // Loading messages
+        const loadingMessages = [
+            "Chargement des ressources...",
+            "Connexion avec les serveurs de l'ONA...",
+            "Initiation de la base de donnée...",
+            "Préparation de l'interface utilisateur..."
+        ];
+        
         // Update progress bar and countdown every second
         const timer = setInterval(() => {
             timeLeft--;
             const progress = ((50 - timeLeft) / 50) * 100;
             progressBar.style.width = `${progress}%`;
-            countdownEl.textContent = `Redirection dans ${timeLeft} secondes...`;
+            
+            // Change message based on progress
+            const messageIndex = Math.floor((progress / 100) * loadingMessages.length);
+            const currentMessage = loadingMessages[Math.min(messageIndex, loadingMessages.length - 1)];
+            const percentage = Math.round(progress);
+            countdownEl.textContent = `${currentMessage} (${percentage}%)`;
             
             if (timeLeft <= 0) {
                 clearInterval(timer);
