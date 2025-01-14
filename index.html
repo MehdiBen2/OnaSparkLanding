@@ -136,6 +136,34 @@
             will-change: transform;
         }
 
+        /* Loading indicator styles */
+        .loading-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #3b82f6;
+            transition: width 1s linear;
+        }
+
+        .countdown {
+            font-size: 1.25rem;
+            color: #e5e5e5;
+            margin-top: 0.5rem;
+        }
+
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -176,12 +204,19 @@
                         <span class="subtitle">N'a Jamais Été Aussi Simple</span>
                     </h1>
                     <p class="description">
-                        Une plateforme unifiée offrant des outils d'évaluation complets pour une gestion optimale des ressources en eau.
+                        Une plateforme unifiée offrant des outils d'évaluation complets pour une gestion optimale des ressources en eau. 
+                        La plateforme nécessite environ 50 secondes pour démarrer. Veuillez patienter pendant le chargement.
                     </p>
                 </div>
+                <div class="loading-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <div class="countdown" id="countdown">Redirection dans 50 secondes...</div>
+                </div>
                 <div class="buttons">
-                    <button class="btn btn-glass" onclick="window.location.href='{{ url_for('landing.main_landing') }}'">Commencer</button>
-                    <button class="btn btn-primary" onclick="window.location.href='{{ url_for('serve_docs') }}'">Documentation</button>
+                    <button class="btn btn-glass" id="startBtn">Commencer</button>
+                    <button class="btn btn-primary" id="docsBtn">Documentation</button>
                 </div>
             </div>
             <div>
@@ -189,5 +224,42 @@
             </div>
         </div>
     </div>
+    <script>
+        // Your Render app URL
+        const RENDER_APP_URL = 'https://onaspark.onrender.com';
+        const DOCS_URL = 'https://onaspark.onrender.com/docs';  // Update this with your actual docs URL
+        
+        // Send immediate request to wake up the Render app
+        fetch(RENDER_APP_URL, { mode: 'no-cors' })
+            .then(() => console.log('Wake-up request sent to Render app'))
+            .catch(error => console.log('Wake-up request sent (no-cors mode)'));
+        
+        // Initialize countdown
+        let timeLeft = 50;
+        const progressBar = document.getElementById('progress');
+        const countdownEl = document.getElementById('countdown');
+        
+        // Update progress bar and countdown every second
+        const timer = setInterval(() => {
+            timeLeft--;
+            const progress = ((50 - timeLeft) / 50) * 100;
+            progressBar.style.width = `${progress}%`;
+            countdownEl.textContent = `Redirection dans ${timeLeft} secondes...`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = RENDER_APP_URL;
+            }
+        }, 1000);
+
+        // Button click handlers
+        document.getElementById('startBtn').addEventListener('click', () => {
+            window.location.href = RENDER_APP_URL;
+        });
+
+        document.getElementById('docsBtn').addEventListener('click', () => {
+            window.location.href = DOCS_URL;
+        });
+    </script>
 </body>
 </html>
