@@ -238,11 +238,31 @@
         // Your Render app URL
         const RENDER_APP_URL = 'https://onaspark.onrender.com';
         const DOCS_URL = 'https://onaspark.onrender.com/docs';  // Update this with your actual docs URL
+        const ERROR_PAGE_URL = '/error.html';
         
-        // Send immediate request to wake up the Render app
-        fetch(RENDER_APP_URL, { mode: 'no-cors' })
-            .then(() => console.log('Wake-up request sent to Render app'))
-            .catch(error => console.log('Wake-up request sent (no-cors mode)'));
+        // Function to handle redirection with timeout and error handling
+        function redirectWithFallback() {
+            // Set a timeout for the redirection
+            const redirectTimeout = setTimeout(() => {
+                window.location.href = ERROR_PAGE_URL;
+            }, 60000); // 60 seconds timeout
+            
+            // Try to fetch the Render app with more comprehensive error handling
+            fetch(RENDER_APP_URL, { 
+                mode: 'no-cors',
+                method: 'GET',
+                timeout: 50000 // 50 seconds timeout for the fetch itself
+            })
+            .then(response => {
+                clearTimeout(redirectTimeout);
+                window.location.href = RENDER_APP_URL;
+            })
+            .catch(error => {
+                clearTimeout(redirectTimeout);
+                console.error('Failed to connect to Render app:', error);
+                window.location.href = ERROR_PAGE_URL;
+            });
+        }
         
         // Initialize countdown
         let timeLeft = 50;
@@ -271,18 +291,21 @@
             
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                window.location.href = RENDER_APP_URL;
+                redirectWithFallback();
             }
         }, 1000);
 
         // Button click handlers
         document.getElementById('startBtn').addEventListener('click', () => {
-            window.location.href = RENDER_APP_URL;
+            redirectWithFallback();
         });
 
         document.getElementById('docsBtn').addEventListener('click', () => {
             window.location.href = DOCS_URL;
         });
+
+        // Attempt initial connection when page loads
+        redirectWithFallback();
     </script>
 </body>
 </html>
