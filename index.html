@@ -255,7 +255,11 @@
             })
             .then(response => {
                 clearTimeout(redirectTimeout);
-                window.location.href = RENDER_APP_URL;
+                
+                // Add a mandatory 5-second wait before redirecting
+                setTimeout(() => {
+                    window.location.href = RENDER_APP_URL;
+                }, 5000);
             })
             .catch(error => {
                 clearTimeout(redirectTimeout);
