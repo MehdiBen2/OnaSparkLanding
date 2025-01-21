@@ -40,7 +40,7 @@
             background-image: url('static/images/onab/landingpagebg3.jpg');
             background-size: cover;
             background-position: center;
-            filter: blur(8px) brightness(0.7);
+            filter: blur(1px) brightness(0.7);
             will-change: transform;
         }
 
@@ -50,7 +50,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             will-change: transform;
         }
 
@@ -65,7 +65,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 3rem;
             align-items: center;
             animation: fadeIn 0.5s ease-out forwards;
@@ -130,11 +130,53 @@
             background: #2563eb;
         }
 
-        .logo {
-            width: 100%;
-            max-width: 400px;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-            will-change: transform;
+        /* Loading balls animation */
+        .loading-balls {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 15px;
+            position: relative;
+            top: -2px;
+        }
+
+        .loading-ball {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 4px;
+            animation: bounce 0.5s ease-in-out infinite alternate;
+            opacity: 0.8;
+        }
+
+        .loading-ball:nth-child(1) {
+            background-color: #3B82F6; /* Blue */
+        }
+
+        .loading-ball:nth-child(2) {
+            background-color: #c5d301; /* Ona Green */
+            animation-delay: 0.1s;
+        }
+
+        .loading-ball:nth-child(3) {
+            background-color: white;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .countdown {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            color: #e5e5e5;
+            margin-top: 0.5rem;
         }
 
         /* Loading indicator styles */
@@ -161,12 +203,6 @@
             transition: width 1s linear;
         }
 
-        .countdown {
-            font-size: 1.25rem;
-            color: #e5e5e5;
-            margin-top: 0.5rem;
-        }
-
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -189,11 +225,6 @@
 
             .buttons {
                 justify-content: center;
-            }
-
-            .logo {
-                max-width: 300px;
-                margin: 2rem auto;
             }
         }
     </style>
@@ -223,14 +254,16 @@
                         <div class="progress" id="progress"></div>
                     </div>
                     <div class="countdown" id="countdown">Redirection dans 50 secondes...</div>
+                    <div class="loading-balls">
+                        <div class="loading-ball"></div>
+                        <div class="loading-ball"></div>
+                        <div class="loading-ball"></div>
+                    </div>
                 </div>
                 <div class="buttons">
                     <button class="btn btn-glass" id="startBtn">Commencer</button>
                     <button class="btn btn-primary" id="docsBtn">Documentation</button>
                 </div>
-            </div>
-            <div>
-                <img src="static/images/SPARK.png" alt="SPARK Logo" class="logo" loading="eager">
             </div>
         </div>
     </div>
@@ -295,7 +328,9 @@
             
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                redirectWithFallback();
+                // Commented out automatic redirect
+                // redirectWithFallback();
+                countdownEl.textContent = "Prêt à démarrer. Cliquez sur 'Commencer'.";
             }
         }, 1000);
 
@@ -308,8 +343,8 @@
             window.location.href = DOCS_URL;
         });
 
-        // Attempt initial connection when page loads
-        redirectWithFallback();
+        // Commented out initial connection attempt
+        // redirectWithFallback();
     </script>
 </body>
 </html>
