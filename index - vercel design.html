@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="static/favicon.ico" />
+    <title>Ona Spark - Centralisation Simplifiée</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://onaspark.onrender.com/">
+    <meta property="og:title" content="Ona Spark - Centralisation Simplifiée">
+    <meta property="og:description" content="Une plateforme unifiée offrant des outils de gestion complets pour l'Office National de l'Assainissement !">
+    <meta property="og:image" content="https://onaspark.onrender.com/static/images/onab/sparklt1.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://onaspark.onrender.com/">
+    <meta property="twitter:title" content="Ona Spark - Centralisation Simplifiée">
+    <meta property="twitter:description" content="Une plateforme unifiée offrant des outils de gestion complets pour l'Office National de l'Assainissement !">
+    <meta property="twitter:image" content="https://onaspark.onrender.com/static/images/onab/sparklt1.png">
+
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #111111;
+            --accent: #0070f3;
+            --accent-glow: rgba(0, 112, 243, 0.5);
+            --text: #ffffff;
+            --text-secondary: #888888;
+            --success: #0070f3;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 0%, 
+                    rgba(0, 112, 243, 0.4), 
+                    rgba(0, 0, 0, 0.95) 60%),
+                linear-gradient(45deg, 
+                    rgba(0, 0, 0, 0.9), 
+                    rgba(0, 112, 243, 0.3));
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            width: 240px;
+            height: auto;
+            margin-bottom: 2.5rem;
+            filter: brightness(1.3) drop-shadow(0 0 20px rgba(0, 112, 243, 0.4));
+            transition: all 0.4s ease;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo:hover {
+            transform: scale(1.08);
+            filter: brightness(1.4) drop-shadow(0 0 25px rgba(0, 112, 243, 0.6));
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge span {
+            background: linear-gradient(to right, #0070f3, #00a6ed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .title {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to bottom right, #ffffff 30%, #999999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .status-container {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin: 2.5rem auto;
+            max-width: 500px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 112, 243, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .status-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 112, 243, 0.2);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #60a5fa);
+            transition: width 0.3s ease;
+        }
+
+        .status-message {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1a85ff);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 112, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0060df, #0070f3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 112, 243, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .dot {
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: dotPulse 1.5s infinite;
+            opacity: 0.5;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .status-container {
+                margin: 2rem 1rem;
+                padding: 2rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .logo {
+                width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="container">
+        <div class="hero">
+            <img src="static/images/onab/sparklt1.png" alt="Ona Spark Logo" class="logo">
+            <div class="badge">
+                <span>Alpha 0.0.1</span>
+            </div>
+            <h1 class="title">La Centralisation Simplifiée</h1>
+            <p class="subtitle">
+                Une plateforme unifiée offrant des outils de gestion complets pour l'Office National de l'Assainissement
+            </p>
+
+            <div class="status-container">
+                <div class="status-header">
+                    <span class="status-title">État du Déploiement</span>
+                    <span class="status-title" id="percentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="status-message" id="status-message">
+                    Initialisation des services
+                    <span class="loading-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" id="startBtn">
+                    Lancer l'Application
+                </button>
+                <button class="btn btn-secondary" id="docsBtn">
+                    Documentation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global redirection control
+        window.preventRedirection = true;
+
+        // Function to stop all redirections
+        function stopRedirections() {
+            window.preventRedirection = true;
+            console.log('Redirections have been stopped. The page will not redirect.');
+        }
+
+        // Function to resume redirections
+        function resumeRedirections() {
+            window.preventRedirection = false;
+            console.log('Redirections have been resumed.');
+        }
+
+        // Your Render app URL
+        const RENDER_APP_URL = 'https://onaspark.onrender.com';
+        const DOCS_URL = 'https://onaspark.onrender.com/docs';  // Update this with your actual docs URL
+        const ERROR_PAGE_URL = '/error.html';
+        
+        // Function to handle redirection with timeout and error handling
+        function redirectWithFallback() {
+            // Check if redirections are prevented
+            if (window.preventRedirection) {
+                console.log('Redirection prevented by user.');
+                return;
+            }
+
+            // Set a timeout for the redirection
+            const redirectTimeout = setTimeout(() => {
+                if (!window.preventRedirection) {
+                    window.location.href = ERROR_PAGE_URL;
+                }
+            }, 55000); // 55 seconds timeout
+            
+            // Function to check website availability
+            function checkWebsiteAvailability() {
+                return new Promise((resolve, reject) => {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => {
+                        controller.abort();
+                        reject(new Error('Timeout'));
+                    }, 10000); // 10 seconds timeout for availability check
+                    
+                    fetch(RENDER_APP_URL, { 
+                        mode: 'no-cors',
+                        method: 'GET',
+                        signal: controller.signal
+                    })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        resolve(true);
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        reject(error);
+                    });
+                });
+            }
+            
+            // Check website availability and handle redirection
+            checkWebsiteAvailability()
+                .then(() => {
+                    clearTimeout(redirectTimeout);
+                    if (!window.preventRedirection) {
+                        setTimeout(() => {
+                            window.location.href = RENDER_APP_URL;
+                        }, 5000); // Mandatory 5-second wait
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to connect to Render app:', error);
+                    
+                    // If first attempt fails, try a second time after a short delay
+                    setTimeout(() => {
+                        if (!window.preventRedirection) {
+                            checkWebsiteAvailability()
+                                .then(() => {
+                                    clearTimeout(redirectTimeout);
+                                    if (!window.preventRedirection) {
+                                        setTimeout(() => {
+                                            window.location.href = RENDER_APP_URL;
+                                        }, 5000); // Mandatory 5-second wait
+                                    }
+                                })
+                                .catch(() => {
+                                    clearTimeout(redirectTimeout);
+                                    if (!window.preventRedirection) {
+                                        window.location.href = ERROR_PAGE_URL;
+                                    }
+                                });
+                        }
+                    }, 5000); // Wait 5 seconds before retry
+                });
+        }
+        
+        // Update the status message and progress bar
+        const progressBar = document.getElementById('progress');
+        const statusMessage = document.getElementById('status-message');
+        const percentageEl = document.getElementById('percentage');
+        
+        const loadingMessages = [
+            "Initialisation des services",
+            "Configuration des ressources",
+            "Connexion aux serveurs",
+            "Préparation de l'interface"
+        ];
+        
+        let timeLeft = 50;
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            const progress = ((50 - timeLeft) / 50) * 100;
+            progressBar.style.width = `${progress}%`;
+            percentageEl.textContent = `${Math.round(progress)}%`;
+            
+            const messageIndex = Math.floor((progress / 100) * loadingMessages.length);
+            const currentMessage = loadingMessages[Math.min(messageIndex, loadingMessages.length - 1)];
+            statusMessage.innerHTML = `${currentMessage}<span class="loading-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </span>`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                statusMessage.textContent = "Prêt à démarrer";
+                redirectWithFallback();
+            }
+        }, 1000);
+
+        // Button click handlers
+        document.getElementById('startBtn').addEventListener('click', () => {
+            redirectWithFallback();
+        });
+
+        document.getElementById('docsBtn').addEventListener('click', () => {
+            window.location.href = DOCS_URL;
+        });
+
+        // Commented out initial connection attempt
+         redirectWithFallback();
+    </script>
+</body>
+</html>

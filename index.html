@@ -282,6 +282,115 @@
                 max-width: 300px;
             }
         }
+
+        /* Enhanced server status indicators styles */
+        .server-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .server-status:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .status-good { 
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+        
+        .status-warning { 
+            background: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+        
+        .status-error { 
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Enhanced responsive styles */
+        @media (max-width: 768px) {
+            .server-status {
+                bottom: auto;
+                top: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+
+            .server-status:hover {
+                transform: translateX(50%) translateY(-2px);
+            }
+
+            .status-indicator {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .server-status {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Enhanced smart reconnect styles */
+        .smart-reconnect {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .smart-reconnect button {
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .smart-reconnect button:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -326,9 +435,13 @@
             </div>
         </div>
     </div>
+    <div class="server-status">
+        <div class="status-indicator"></div>
+        <span id="statusText">Checking server status...</span>
+    </div>
     <script>
         // Global redirection control
-        window.preventRedirection = true;
+        window.preventRedirection = false;
 
         // Function to stop all redirections
         function stopRedirections() {
@@ -342,9 +455,9 @@
             console.log('Redirections have been resumed.');
         }
 
-        // Your Render app URL
+        // Update the URLs to use the specific domain
         const RENDER_APP_URL = 'https://onaspark.onrender.com';
-        const DOCS_URL = 'https://onaspark.onrender.com/docs';  // Update this with your actual docs URL
+        const DOCS_URL = 'https://onaspark.onrender.com/docs';
         const ERROR_PAGE_URL = '/error.html';
         
         // Function to handle redirection with timeout and error handling
@@ -467,6 +580,141 @@
 
         // Commented out initial connection attempt
          redirectWithFallback();
+
+        // Server health monitoring system
+        class ServerMonitor {
+            constructor() {
+                this.statusIndicator = document.querySelector('.status-indicator');
+                this.statusText = document.getElementById('statusText');
+                this.retryCount = 0;
+                this.maxRetries = 3;
+                this.checkInterval = 5000; // 5 seconds
+                this.endpoints = [
+                    '/',              // Main endpoint
+                    '/api/health',    // Health check endpoint
+                    '/ping'           // Fallback endpoint
+                ];
+            }
+
+            async checkServerHealth() {
+                const startTime = performance.now();
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000); // Increased timeout for Render
+
+                    // Try to load the favicon as a quick health check
+                    const response = await fetch(`${RENDER_APP_URL}/static/favicon.ico`, {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        signal: controller.signal,
+                        cache: 'no-cache'
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    const endTime = performance.now();
+                    const responseTime = Math.round(endTime - startTime);
+                    
+                    if (responseTime > 5000) {
+                        this.updateStatus('warning', 'Service en démarrage...');
+                    } else {
+                        this.updateStatus('good', 'Application prête');
+                    }
+                    this.retryCount = 0;
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        this.updateStatus('warning', 'Démarrage du serveur en cours...');
+                    } else {
+                        this.handleError();
+                    }
+                }
+            }
+
+            updateStatus(status, message) {
+                this.statusIndicator.className = 'status-indicator status-' + status;
+                this.statusText.textContent = message;
+                
+                // Update the start button based on status
+                const startBtn = document.getElementById('startBtn');
+                if (status === 'good') {
+                    startBtn.disabled = false;
+                    startBtn.style.opacity = '1';
+                } else {
+                    startBtn.disabled = true;
+                    startBtn.style.opacity = '0.7';
+                }
+            }
+
+            async smartReconnect() {
+                this.updateStatus('warning', 'Tentative de reconnexion alternative...');
+                
+                for (const endpoint of this.endpoints) {
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        
+                        const response = await fetch(`${RENDER_APP_URL}${endpoint}`, {
+                            method: 'HEAD',
+                            mode: 'no-cors',
+                            signal: controller.signal,
+                            cache: 'no-cache'
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        if (response) {
+                            this.updateStatus('good', 'Connexion établie');
+                            return true;
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+                
+                this.updateStatus('error', 'Serveur indisponible');
+                return false;
+            }
+
+            handleError() {
+                this.retryCount++;
+                if (this.retryCount <= this.maxRetries) {
+                    this.updateStatus('warning', `Tentative de reconnexion (${this.retryCount}/${this.maxRetries})`);
+                    setTimeout(() => this.checkServerHealth(), 2000);
+                } else {
+                    this.updateStatus('error', 'Serveur indisponible');
+                    this.showSmartReconnect();
+                }
+            }
+
+            showSmartReconnect() {
+                const reconnectDiv = document.createElement('div');
+                reconnectDiv.className = 'smart-reconnect';
+                reconnectDiv.innerHTML = `
+                    <p>Problème de connexion ?</p>
+                    <button class="btn btn-glass" onclick="serverMonitor.smartReconnect()">
+                        Essayer une route alternative
+                    </button>
+                `;
+                document.querySelector('.loading-container').appendChild(reconnectDiv);
+                reconnectDiv.style.display = 'block';
+            }
+
+            start() {
+                this.checkServerHealth();
+                // Check more frequently during startup
+                const initialInterval = setInterval(() => {
+                    this.checkServerHealth();
+                }, 3000); // Every 3 seconds initially
+
+                // After 1 minute, switch to normal interval
+                setTimeout(() => {
+                    clearInterval(initialInterval);
+                    setInterval(() => this.checkServerHealth(), this.checkInterval);
+                }, 60000);
+            }
+        }
+
+        // Initialize server monitoring
+        const serverMonitor = new ServerMonitor();
+        serverMonitor.start();
     </script>
 </body>
 </html>
