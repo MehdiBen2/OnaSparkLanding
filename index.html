@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="static/favicon.ico" as="image">
+    <link rel="preload" href="https://fonts.cdnfonts.com/css/garet" as="style">
     <link rel="shortcut icon" href="static/favicon.ico" />
     <link href="https://fonts.cdnfonts.com/css/garet" rel="stylesheet">
     <title>Ona Spark</title>
@@ -143,11 +145,16 @@
 
         /* Loading balls animation */
         .loading-balls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .loading-balls-container {
             display: inline-flex;
             align-items: center;
-            margin-left: 15px;
-            position: relative;
-            top: -2px;
         }
 
         .loading-ball {
@@ -256,7 +263,7 @@
 </head>
 <body>
     <div class="bg-wrapper">
-        <div class="bg-image"></div>
+        <div class="bg-image" loading="lazy"></div>
         <div class="bg-overlay"></div>
     </div>
     <div class="container">
@@ -281,9 +288,11 @@
                     </div>
                     <div class="countdown" id="countdown">Redirection dans 50 secondes...</div>
                     <div class="loading-balls">
-                        <div class="loading-ball"></div>
-                        <div class="loading-ball"></div>
-                        <div class="loading-ball"></div>
+                        <div class="loading-balls-container">
+                            <div class="loading-ball"></div>
+                            <div class="loading-ball"></div>
+                            <div class="loading-ball"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="buttons">
