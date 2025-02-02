@@ -114,6 +114,14 @@
             color: #e5e5e5;
         }
 
+        .version-subtitle {
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            margin-top: 0.5rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
         .description {
             font-size: 1.25rem;
             color: #e5e5e5;
@@ -288,6 +296,7 @@
                     <h1 class="title">
                         La Centralisation<br>
                         <span class="subtitle">N'a Jamais Été Aussi Simple</span>
+                        <div class="version-subtitle">Version Alpha 0.0.1</div>
                     </h1>
                     <br>
                     <p class="description">
@@ -318,6 +327,21 @@
         </div>
     </div>
     <script>
+        // Global redirection control
+        window.preventRedirection = true;
+
+        // Function to stop all redirections
+        function stopRedirections() {
+            window.preventRedirection = true;
+            console.log('Redirections have been stopped. The page will not redirect.');
+        }
+
+        // Function to resume redirections
+        function resumeRedirections() {
+            window.preventRedirection = false;
+            console.log('Redirections have been resumed.');
+        }
+
         // Your Render app URL
         const RENDER_APP_URL = 'https://onaspark.onrender.com';
         const DOCS_URL = 'https://onaspark.onrender.com/docs';  // Update this with your actual docs URL
@@ -325,30 +349,78 @@
         
         // Function to handle redirection with timeout and error handling
         function redirectWithFallback() {
+            // Check if redirections are prevented
+            if (window.preventRedirection) {
+                console.log('Redirection prevented by user.');
+                return;
+            }
+
             // Set a timeout for the redirection
             const redirectTimeout = setTimeout(() => {
-                window.location.href = ERROR_PAGE_URL;
-            }, 60000); // 60 seconds timeout
+                if (!window.preventRedirection) {
+                    window.location.href = ERROR_PAGE_URL;
+                }
+            }, 55000); // 55 seconds timeout
             
-            // Try to fetch the Render app with more comprehensive error handling
-            fetch(RENDER_APP_URL, { 
-                mode: 'no-cors',
-                method: 'GET',
-                timeout: 50000 // 50 seconds timeout for the fetch itself
-            })
-            .then(response => {
-                clearTimeout(redirectTimeout);
-                
-                // Add a mandatory 5-second wait before redirecting
-                setTimeout(() => {
-                    window.location.href = RENDER_APP_URL;
-                }, 5000);
-            })
-            .catch(error => {
-                clearTimeout(redirectTimeout);
-                console.error('Failed to connect to Render app:', error);
-                window.location.href = ERROR_PAGE_URL;
-            });
+            // Function to check website availability
+            function checkWebsiteAvailability() {
+                return new Promise((resolve, reject) => {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => {
+                        controller.abort();
+                        reject(new Error('Timeout'));
+                    }, 10000); // 10 seconds timeout for availability check
+                    
+                    fetch(RENDER_APP_URL, { 
+                        mode: 'no-cors',
+                        method: 'GET',
+                        signal: controller.signal
+                    })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        resolve(true);
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        reject(error);
+                    });
+                });
+            }
+            
+            // Check website availability and handle redirection
+            checkWebsiteAvailability()
+                .then(() => {
+                    clearTimeout(redirectTimeout);
+                    if (!window.preventRedirection) {
+                        setTimeout(() => {
+                            window.location.href = RENDER_APP_URL;
+                        }, 5000); // Mandatory 5-second wait
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to connect to Render app:', error);
+                    
+                    // If first attempt fails, try a second time after a short delay
+                    setTimeout(() => {
+                        if (!window.preventRedirection) {
+                            checkWebsiteAvailability()
+                                .then(() => {
+                                    clearTimeout(redirectTimeout);
+                                    if (!window.preventRedirection) {
+                                        setTimeout(() => {
+                                            window.location.href = RENDER_APP_URL;
+                                        }, 5000); // Mandatory 5-second wait
+                                    }
+                                })
+                                .catch(() => {
+                                    clearTimeout(redirectTimeout);
+                                    if (!window.preventRedirection) {
+                                        window.location.href = ERROR_PAGE_URL;
+                                    }
+                                });
+                        }
+                    }, 5000); // Wait 5 seconds before retry
+                });
         }
         
         // Initialize countdown
@@ -379,7 +451,7 @@
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 // Commented out automatic redirect
-                // redirectWithFallback();
+                redirectWithFallback();
                 countdownEl.textContent = "Prêt à démarrer. Cliquez sur 'Commencer'.";
             }
         }, 1000);
@@ -394,7 +466,7 @@
         });
 
         // Commented out initial connection attempt
-         //redirectWithFallback();
+         redirectWithFallback();
     </script>
 </body>
 </html>
