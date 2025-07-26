@@ -1,0 +1,137 @@
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes animateDots {
+  0%, 20% {
+    content: '';
+  }
+  40% {
+    content: '.';
+  }
+  60% {
+    content: '..';
+  }
+  80%, 100% {
+    content: '...';
+  }
+}
+
+.animated-dots::after {
+  content: '';
+  animation: animateDots 2s infinite;
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+}
+
+body {
+  font-family: 'Garet', sans-serif;
+}
+
+.welcome-message {
+  animation: fadeIn 1s ease-in;
+}
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+  gap: 20px;
+}
+
+.loading-details {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  transition: opacity 0.5s ease-out;
+}
+
+.loader-container {
+  /* This class is no longer used for layout */
+}
+.loader-container.fade-out {
+  opacity: 0;
+}
+
+.logo.fade-out {
+  opacity: 0;
+}
+
+.loading-details.fade-out {
+  opacity: 0;
+}
+
+.logo {
+  width: 300px;
+  margin-bottom: 20px;
+  animation: pulse 2.5s infinite ease-in-out;
+}
+
+.loading-text {
+  font-size: 1.3em;
+  font-weight: 400;
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+.dynamic-phrase {
+  font-size: 1.1em;
+  font-weight: 300;
+  min-height: 1.2em; /* Prevent layout shift */
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+.progress-bar-container {
+  width: 280px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 10px; /* Add space above progress bar */
+}
+
+.progress-bar {
+  height: 100%;
+  background: #94b70a;
+  border-radius: 6px;
+  transition: width 1s linear;
+  box-shadow: 0 0 10px #94b70a; /* Add a glow effect */
+} 
