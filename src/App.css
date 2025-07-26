@@ -134,4 +134,65 @@ body {
   border-radius: 6px;
   transition: width 1s linear;
   box-shadow: 0 0 10px #94b70a; /* Add a glow effect */
+}
+
+.auto-redirect-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 0.9em;
+}
+
+.auto-redirect-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.auto-redirect-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #94b70a;
+}
+
+.server-status {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.checking-text {
+  color: #94b70a;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.redirect-text {
+  color: #94b70a;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.go-to-spark-btn {
+  background: linear-gradient(135deg, #94b70a, #a8c930);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Garet', sans-serif;
+  box-shadow: 0 4px 15px rgba(148, 183, 10, 0.3);
+}
+
+.go-to-spark-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(148, 183, 10, 0.4);
 } 
