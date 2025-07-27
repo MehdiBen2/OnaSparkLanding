@@ -15,11 +15,9 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [serverStatus, setServerStatus] = useState('pending'); // 'pending', 'online', 'offline'
-  const [checkingServer, setCheckingServer] = useState(false);
 
   const checkServerStatus = async () => {
     try {
-      setCheckingServer(true);
       await fetch('https://sparkbrq.onrender.com/', {
         method: 'HEAD',
         mode: 'no-cors'
@@ -30,8 +28,6 @@ function App() {
       console.log('Server not ready yet, will retry...');
       setServerStatus('offline');
       return false;
-    } finally {
-      setCheckingServer(false);
     }
   };
 
