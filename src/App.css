@@ -49,6 +49,31 @@ body {
   animation: fadeIn 1s ease-in;
 }
 
+.welcome-message-spark {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fadeInMessage 1.5s ease-in-out;
+  z-index: 5;
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 20px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .background-container {
   position: fixed;
   top: 0;
@@ -103,7 +128,6 @@ body {
 .logo {
   width: 300px;
   margin-bottom: 20px;
-  animation: pulse 2.5s infinite ease-in-out;
 }
 
 .loading-text {
@@ -136,27 +160,6 @@ body {
   box-shadow: 0 0 10px #94b70a; /* Add a glow effect */
 }
 
-.auto-redirect-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  color: white;
-  font-size: 0.9em;
-}
-
-.auto-redirect-toggle label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.auto-redirect-toggle input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #94b70a;
-}
-
 .server-status {
   position: absolute;
   bottom: 120px;
@@ -178,40 +181,68 @@ body {
   font-weight: 400;
 }
 
-.go-to-spark-btn {
-  background: linear-gradient(135deg, #94b70a, #a8c930);
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.2em;
-  font-weight: 700;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Garet', sans-serif;
-  box-shadow: 0 4px 15px rgba(148, 183, 10, 0.3);
-}
-
-.go-to-spark-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(148, 183, 10, 0.4);
-}
-
-.welcome-text {
-  font-size: 3rem;
-  font-weight: 700;
-  color: white;
-  text-align: center;
-  margin-top: 20px;
+.status-capsule {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 8px 15px;
+  border-radius: 20px;
   z-index: 10;
-  opacity: 0;
-  animation: fadeInWelcome 2s forwards;
-  animation-delay: 1s;
-  position: relative;
+  color: white;
+  font-size: 0.9rem;
 }
 
-@keyframes fadeInWelcome {
-  to {
-    opacity: 1;
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.status-indicator.online {
+  background-color: #28a745; /* green */
+  box-shadow: 0 0 8px #28a745;
+}
+
+.status-indicator.offline {
+  background-color: #dc3545; /* red */
+}
+
+.status-indicator.pending {
+  background-color: #ffc107; /* yellow */
+  animation: pulse 1.5s infinite;
+}
+
+.access-spark-btn {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.access-spark-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
   }
 } 

@@ -14,8 +14,7 @@ function App() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
-  const [autoRedirect, setAutoRedirect] = useState(true);
-  const [isServerReady, setIsServerReady] = useState(false);
+  const [serverStatus, setServerStatus] = useState('pending'); // 'pending', 'online', 'offline'
   const [checkingServer, setCheckingServer] = useState(false);
 
   const checkServerStatus = async () => {
@@ -25,10 +24,11 @@ function App() {
         method: 'HEAD',
         mode: 'no-cors'
       });
-      setIsServerReady(true);
+      setServerStatus('online');
       return true;
     } catch (error) {
       console.log('Server not ready yet, will retry...');
+      setServerStatus('offline');
       return false;
     } finally {
       setCheckingServer(false);
@@ -38,6 +38,10 @@ function App() {
   const redirectToApp = () => {
     window.location.href = 'https://sparkbrq.onrender.com/';
   };
+
+  useEffect(() => {
+    checkServerStatus();
+  }, []);
 
   useEffect(() => {
     const phraseInterval = setInterval(() => {
@@ -65,40 +69,38 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (loadingComplete) {
-      const checkInterval = setInterval(async () => {
-        const serverReady = await checkServerStatus();
-        if (serverReady) {
-          clearInterval(checkInterval);
-          if (autoRedirect) {
-            setTimeout(redirectToApp, 1000); // Small delay for user feedback
-          }
-        }
-      }, 2000); // Check every 2 seconds
-
-      return () => clearInterval(checkInterval);
+    if (loadingComplete && serverStatus === 'online') {
+      setTimeout(redirectToApp, 3000); // Redirect after 3 seconds
     }
-  }, [loadingComplete, autoRedirect]);
+  }, [loadingComplete, serverStatus]);
 
   return (
     <div>
       <div className="background-container">
         <DarkVeil />
       </div>
+      <div className="status-capsule">
+        <div className={`status-indicator ${serverStatus}`}></div>
+        <span>OnaSpark Status: {serverStatus}</span>
+      </div>
+      {serverStatus === 'online' && (
+        <button className="access-spark-btn" onClick={redirectToApp}>
+          Accéder à Spark
+        </button>
+      )}
+      
+      {loadingComplete && serverStatus === 'online' && (
+        <h1 className="welcome-message-spark">
+          Bienvenue sur Spark
+        </h1>
+      )}
+
       <div className="content">
-        <div className="auto-redirect-toggle">
-          <label>
-            <input
-              type="checkbox"
-              checked={autoRedirect}
-              onChange={(e) => setAutoRedirect(e.target.checked)}
-            />
-            Redirection automatique
-          </label>
-        </div>
-        
         <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className={`logo ${loadingComplete ? 'fade-out' : ''}`} />
-        <div className="welcome-text">Welcome</div>
+        
+        {loadingComplete && serverStatus === 'offline' && (
+          <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
+        )}
         
         <div className={`loading-details ${loadingComplete ? 'fade-out' : ''}`}>
           <p className="loading-text">
@@ -109,22 +111,6 @@ function App() {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
-        
-        {loadingComplete && (
-          <div className="server-status">
-            {checkingServer && (
-              <p className="checking-text">Vérification du serveur...</p>
-            )}
-            {isServerReady && !autoRedirect && (
-              <button className="go-to-spark-btn" onClick={redirectToApp}>
-                Aller vers Spark
-              </button>
-            )}
-            {isServerReady && autoRedirect && (
-              <p className="redirect-text">Redirection en cours...</p>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
