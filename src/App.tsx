@@ -91,8 +91,8 @@ function App() {
         </h1>
       )}
 
-      <div className="content">
-        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className={`logo ${loadingComplete ? 'fade-out' : ''}`} />
+      <div className={`content ${loadingComplete ? 'fade-out' : ''}`}>
+        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
         
         {loadingComplete && serverStatus === 'offline' && (
           <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
