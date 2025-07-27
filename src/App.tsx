@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DarkVeil from './components/backgrounds/DarkVeil/DarkVeil';
 import './components/backgrounds/DarkVeil/DarkVeil.css';
 import './App.css';
@@ -21,7 +21,7 @@ function App() {
   const checkServerStatus = async () => {
     try {
       setCheckingServer(true);
-      const response = await fetch('https://sparkbrq.onrender.com/', {
+      await fetch('https://sparkbrq.onrender.com/', {
         method: 'HEAD',
         mode: 'no-cors'
       });
