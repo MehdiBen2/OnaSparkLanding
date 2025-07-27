@@ -98,6 +98,7 @@ function App() {
         </div>
         
         <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className={`logo ${loadingComplete ? 'fade-out' : ''}`} />
+        <div className="welcome-text">Welcome</div>
         
         <div className={`loading-details ${loadingComplete ? 'fade-out' : ''}`}>
           <p className="loading-text">
