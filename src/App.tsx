@@ -15,6 +15,16 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [serverStatus, setServerStatus] = useState('pending'); // 'pending', 'online', 'offline'
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const checkServerStatus = async () => {
     try {
@@ -73,7 +83,7 @@ function App() {
   return (
     <div>
       <div className="background-container">
-        <DarkVeil />
+        <DarkVeil resolutionScale={isMobile ? 0.5 : 1} />
       </div>
       <div className="status-capsule">
         <div className={`status-indicator ${serverStatus}`}></div>

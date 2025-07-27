@@ -263,4 +263,48 @@ body {
   100% {
     box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
   }
+}
+
+@media (max-width: 768px) {
+  .content {
+    gap: 10px;
+  }
+
+  .logo {
+    width: 250px;
+  }
+
+  .loading-text {
+    font-size: 1em;
+  }
+
+  .dynamic-phrase {
+    font-size: 0.9em;
+  }
+
+  .progress-bar-container {
+    width: 200px;
+  }
+
+  .welcome-message-spark {
+    font-size: 2rem;
+  }
+
+  .status-capsule {
+    top: 10px;
+    left: 10px;
+    font-size: 0.8rem;
+  }
+
+  .access-spark-btn {
+    top: 50px;
+    left: 10px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+.darkveil-canvas {
+  width: 100vw !important;
+  height: 100vh !important;
 } 
