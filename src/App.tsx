@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import DarkVeil from './components/backgrounds/DarkVeil/DarkVeil';
-import './components/backgrounds/DarkVeil/DarkVeil.css';
 import './App.css';
 
 const phrases = [
@@ -15,11 +13,10 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [serverStatus, setServerStatus] = useState('pending'); // 'pending', 'online', 'offline'
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      // Handle resize if needed
     };
 
     window.addEventListener('resize', handleResize);
@@ -76,24 +73,24 @@ function App() {
 
   useEffect(() => {
     if (loadingComplete && serverStatus === 'online') {
-      setTimeout(redirectToApp, 3000); // Redirect after 3 seconds
+      setTimeout(redirectToApp, 3000);
     }
   }, [loadingComplete, serverStatus]);
 
   return (
-    <div>
-      <div className="background-container">
-        <DarkVeil resolutionScale={isMobile ? 0.5 : 1} />
-      </div>
+    <div className="app-container">
+      <div className="gradient-background"></div>
       <div className="status-capsule">
         <div className={`status-indicator ${serverStatus}`}></div>
         <span>OnaSpark Status: {serverStatus}</span>
       </div>
-      {serverStatus === 'online' && (
-        <button className="access-spark-btn" onClick={redirectToApp}>
-          Accéder à Spark
-        </button>
-      )}
+      <button 
+        className={`access-spark-btn ${serverStatus === 'online' ? 'enabled' : 'disabled'}`} 
+        onClick={redirectToApp}
+        disabled={serverStatus !== 'online'}
+      >
+        Accéder à Spark
+      </button>
       
       {loadingComplete && serverStatus === 'online' && (
         <h1 className="welcome-message-spark">
@@ -104,11 +101,8 @@ function App() {
       <div className={`content ${loadingComplete ? 'fade-out' : ''}`}>
         <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
         
-        {loadingComplete && serverStatus === 'offline' && (
-          <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
-        )}
-        
         <div className={`loading-details ${loadingComplete ? 'fade-out' : ''}`}>
+          <h1 className="loading-title">Chargement</h1>
           <p className="loading-text">
             Spark nécessite quelques secondes pour charger<span className="animated-dots"></span>
           </p>
@@ -117,9 +111,13 @@ function App() {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
+        
+        {loadingComplete && serverStatus === 'offline' && (
+          <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
+        )}
       </div>
     </div>
   );
 }
 
-export default App; 
+export default App;
