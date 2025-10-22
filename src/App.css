@@ -105,9 +105,9 @@ body {
 
 .content {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -129,8 +129,6 @@ body {
   gap: 20px;
   max-width: 600px;
   animation: slideInLeft 1s ease-out;
-  align-items: flex-end;
-  text-align: right;
 }
 
 .loading-title {
@@ -152,7 +150,6 @@ body {
 
 .logo {
   width: 400px;
-  margin-bottom: 30px;
   animation: pulse 3s infinite ease-in-out;
 }
 
@@ -285,6 +282,7 @@ body {
 
 @media (max-width: 768px) {
   .content {
+    flex-direction: column;
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -292,6 +290,7 @@ body {
   .logo {
     width: 200px;
     margin-bottom: 20px;
+    order: -1;
   }
 
   .loading-title {
