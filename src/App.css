@@ -107,7 +107,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -129,6 +129,8 @@ body {
   gap: 20px;
   max-width: 600px;
   animation: slideInLeft 1s ease-out;
+  align-items: flex-end;
+  text-align: right;
 }
 
 .loading-title {
@@ -149,7 +151,7 @@ body {
 }
 
 .logo {
-  width: 250px;
+  width: 400px;
   margin-bottom: 30px;
   animation: pulse 3s infinite ease-in-out;
 }
