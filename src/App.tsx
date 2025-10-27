@@ -85,13 +85,15 @@ function App() {
         <div className={`status-indicator ${serverStatus}`}></div>
         <span>OnaSpark Status: {serverStatus}</span>
       </div>
-      <button 
-        className={`access-spark-btn ${serverStatus === 'online' ? 'enabled' : 'disabled'}`} 
-        onClick={redirectToApp}
-        disabled={serverStatus !== 'online'}
-      >
-        Accéder à Spark
-      </button>
+      {!loadingComplete && (
+        <button 
+          className={`access-spark-btn ${serverStatus === 'online' ? 'enabled' : 'disabled'}`} 
+          onClick={redirectToApp}
+          disabled={serverStatus !== 'online'}
+        >
+          Accéder à Spark
+        </button>
+      )}
       
       {loadingComplete && serverStatus === 'online' && (
         <h1 className="welcome-message-spark">
