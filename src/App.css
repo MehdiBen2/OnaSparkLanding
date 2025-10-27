@@ -151,6 +151,7 @@ body {
 .logo {
   width: 400px;
   animation: pulse 3s infinite ease-in-out;
+  margin-left: -100px;
 }
 
 .loading-text {

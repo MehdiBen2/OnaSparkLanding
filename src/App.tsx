@@ -99,8 +99,6 @@ function App() {
       )}
 
       <div className={`content ${loadingComplete ? 'fade-out' : ''}`}>
-        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
-        
         <div className={`loading-details ${loadingComplete ? 'fade-out' : ''}`}>
           <h1 className="loading-title">Chargement</h1>
           <p className="loading-text">
@@ -111,6 +109,8 @@ function App() {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
+        
+        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
         
         {loadingComplete && serverStatus === 'offline' && (
           <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
