@@ -148,10 +148,17 @@ body {
   opacity: 0;
 }
 
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-left: -100px;
+}
+
 .logo {
   width: 400px;
   animation: pulse 3s infinite ease-in-out;
-  margin-left: -100px;
 }
 
 .loading-text {
@@ -286,6 +293,10 @@ body {
     flex-direction: column;
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  .logo-section {
+    margin-left: 0;
   }
 
   .logo {
