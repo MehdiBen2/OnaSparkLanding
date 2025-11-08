@@ -13,6 +13,7 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [serverStatus, setServerStatus] = useState('pending'); // 'pending', 'online', 'offline'
+  const [showDelayMessage, setShowDelayMessage] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -72,6 +73,15 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (progress >= 100 && serverStatus !== 'online') {
+      const delayTimer = setTimeout(() => {
+        setShowDelayMessage(true);
+      }, 2000);
+      return () => clearTimeout(delayTimer);
+    }
+  }, [progress, serverStatus]);
+
+  useEffect(() => {
     if (loadingComplete && serverStatus === 'online') {
       setTimeout(redirectToApp, 3000);
     }
@@ -99,8 +109,6 @@ function App() {
       )}
 
       <div className={`content ${loadingComplete ? 'fade-out' : ''}`}>
-        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
-        
         <div className={`loading-details ${loadingComplete ? 'fade-out' : ''}`}>
           <h1 className="loading-title">Chargement</h1>
           <p className="loading-text">
@@ -110,7 +118,14 @@ function App() {
           <div className="progress-bar-container">
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
+          {showDelayMessage && (
+            <p className="delay-message">
+              Spark prend plus de temps que prévu, veuillez patienter !
+            </p>
+          )}
         </div>
+        
+        <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
         
         {loadingComplete && serverStatus === 'offline' && (
           <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
