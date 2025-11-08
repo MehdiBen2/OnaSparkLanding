@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import DynamicFeatures from './DynamicFeatures';
 
 const phrases = [
   "Initialisation des modules...",
@@ -128,14 +127,7 @@ function App() {
           )}
         </div>
         
-<<<<<<< HEAD
         <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
-=======
-        <div className="logo-section">
-          <img src="/images/onalogos/sparkLogofullnewd.png" alt="Spark Logo" className="logo" />
-          <DynamicFeatures />
-        </div>
->>>>>>> 8f711dd3057f19a28f7d37ff051bbd8a12754f30
         
         {loadingComplete && serverStatus === 'offline' && (
           <p className="server-offline-text">Le serveur est actuellement indisponible. Veuillez réessayer plus tard.</p>
